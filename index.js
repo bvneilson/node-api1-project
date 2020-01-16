@@ -109,9 +109,15 @@ server.put('/api/users/:id', (req, res) => {
   } else {
     db.update(id, req.body).then(user => {
       if (user) {
-        res.status(200).json({
-          success: true,
-          user
+        db.findById(id).then(userObj => {
+          res.status(201).json({
+            success: true,
+            user: userObj
+          })
+        }).catch(err => {
+          res.status(400).json({
+            error: err
+          })
         })
       } else {
         res.status(404).json({
